@@ -1,15 +1,12 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	export let inputValue = '';
-	export let allDone = false;
 	const dispatch = createEventDispatcher();
 
-	const handleSubmit = (e) => {
-		submitCurrentValue(e.target.todoInput.value);
-	};
+	export let inputValue = '';
 
-	const handleChange = (todoId) => {
-		dispatch('change', { todoId });
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		submitCurrentValue(e.target.todoInput.value);
 	};
 
 	const submitCurrentValue = (value) => {
@@ -22,13 +19,6 @@
 
 <form on:submit={handleSubmit}>
 	<input
-		type="checkbox"
-		value="Mark all"
-		alt="Mark All"
-		checked={allDone}
-		on:change={handleChange}
-	/>
-	<input
 		type="text"
 		name="todoInput"
 		bind:value={inputValue}
@@ -37,3 +27,17 @@
 	/>
 	<button type="submit">Add</button>
 </form>
+
+<style>
+	button {
+		@apply text-white bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 mr-2 mb-2;
+	}
+
+	button:hover {
+		@apply bg-blue-800;
+	}
+
+	button:focus {
+		@apply ring-4 ring-blue-300 outline-none;
+	}
+</style>
