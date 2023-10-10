@@ -1,6 +1,8 @@
 <script>
 	import '$lib/types.js';
 	import Toggle from './Toggle.svelte';
+	import ToggleAll from './ToggleAll.svelte';
+
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
@@ -9,6 +11,7 @@
 	 */
 	export let items = [];
 	export let allDone = false;
+	let activeId = null;
 
 	const handleChange = (todoId) => {
 		dispatch('changeItem', { todoId });
@@ -21,36 +24,58 @@
 	const handleDelete = (todoId) => {
 		dispatch('delete', { todoId });
 	};
+
+	const handleActiveItem = (todoId) => {
+		activeId = todoId;
+	};
+
+	const handleSubmit = (e, todoId) => {
+		e.preventDefault();
+		activeId = null;
+		dispatch('updateTodo', { todoId, value: e.target.todoInput.value });
+	};
 </script>
 
-{#if items != null && items.length > 0}
-	<div class="flex items-center gap-2 p-2">
-		<Toggle bind:checked={allDone} id="all" on:change={handleChangeAll} /><span>Mark all</span>
-	</div>
+{#if items?.length > 0}
+	<ToggleAll bind:allDone on:changeAll={handleChangeAll} />
 {/if}
-
-<ul class="list-none p-0">
-	{#each items as item (item.id)}
-		<li>
-			<div class="p-2 gap-2">
-				<Toggle bind:id={item.id} bind:checked={item.isDone} on:change={() => handleChange(item.id)} />
-				<label for="isDone{item.id}">{item.value}</label>
-			</div>
-			<button type="button" on:click={() => handleDelete(item.id)}>X</button>
-		</li>
-	{/each}
-</ul>
+<div class="bg-white rounded-lg shadow-lg mt-2">
+	<ul class="list-none p-0">
+		{#each items as item (item.id)}
+			<li>
+				<div class="px-2 py-3 gap-3">
+					<Toggle
+						bind:id={item.id}
+						bind:checked={item.isDone}
+						on:change={() => handleChange(item.id)}
+					/>
+					{#if activeId !== item.id}
+						<label for="isDone{item.id}" on:dblclick={() => handleActiveItem(item.id)}
+							>{item.value}</label
+						>
+					{:else}
+						<form on:submit={(e) => handleSubmit(e, item.id)}>
+							<input class="h-7" type="text" value={item.value} name="todoInput" />
+						</form>
+					{/if}
+				</div>
+				<button
+					type="button"
+					class="bg-gray-400 hover:bg-red-500 w-6 h-6 rounded-full text-white mr-2"
+					on:click={() => handleDelete(item.id)}>x</button
+				>
+			</li>
+		{/each}
+	</ul>
+</div>
 
 <style>
 	li {
-		@apply flex justify-between;
-		margin: 0.5rem 0;
-		border: 1px solid #ccc;
-		background-color: #f9f9f9;
+		@apply flex justify-between items-center;
 	}
 
-	li > div:hover {
-		background-color: #ececec;
+	li:hover {
+		@apply bg-blue-100;
 	}
 
 	li > div {

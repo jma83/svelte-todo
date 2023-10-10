@@ -14,11 +14,15 @@
 		@apply font-poppins;
 	}
 
+	body {
+		@apply bg-gray-100;
+	}
+
 	input[type='text'] {
 		@apply rounded-lg border-2 border-gray-200 p-1;
 	}
 
 	h1 {
-		@apply text-4xl;
+		@apply text-4xl font-semibold;
 	}
 }

@@ -17,12 +17,13 @@
 	};
 </script>
 
-<form on:submit={handleSubmit}>
+<form class="w-full flex md:flex-nowrap flex-wrap gap-2" on:submit={handleSubmit}>
 	<input
+		class="w-full"
 		type="text"
 		name="todoInput"
 		bind:value={inputValue}
-		placeholder="What needs to be done?"
+		placeholder="What needs to be done? 🤔"
 		autofocus
 	/>
 	<button type="submit">Add</button>
@@ -30,7 +31,7 @@
 
 <style>
 	button {
-		@apply text-white bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 mr-2 mb-2;
+		@apply text-white bg-blue-700 font-medium rounded-lg text-sm px-4 py-2;
 	}
 
 	button:hover {
