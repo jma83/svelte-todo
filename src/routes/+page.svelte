@@ -98,6 +98,11 @@
 		<span class="p-1 font-semibold">No results for current filters 🙁</span>
 	{/if}
 	{#if itemsList?.length !== 0}
-		<Filters bind:filters bind:currentFilter on:clearDone={clearDoneTasks} />
+		<Filters
+			bind:filters
+			bind:currentFilter
+			bind:items={itemsList}
+			on:clearDone={clearDoneTasks}
+		/>
 	{/if}
 </div>
