@@ -25,36 +25,20 @@
 		const unsubscribe = page.subscribe((page) => {
 			currentFilter = page.url.searchParams.get('filter') || FILTER_ALL;
 			allDone = false;
-			updateFilteredList();
 		});
 
 		return unsubscribe;
 	});
 
-	const updateFilteredList = () => {
-		switch (currentFilter) {
-			case FILTER_ACTIVE:
-				filteredList = itemsList.filter((item) => !item.isDone);
-				break;
-			case FILTER_DONE:
-				filteredList = itemsList.filter((item) => item.isDone);
-				break;
-			default:
-				filteredList = [...itemsList];
-		}
-	};
-
 	const handleSubmit = (value) => {
 		todoValue = '';
 		itemsList = [...itemsList, { value: value.detail.todoValue, id: uuidv4(), isDone: false }];
-		updateFilteredList();
 	};
 
 	const handleChange = (value) => {
 		itemsList = itemsList.map((item) =>
 			item.id === value.detail.todoId ? { ...item, isDone: !item.isDone } : item
 		);
-		updateFilteredList();
 	};
 
 	const handleUpdateTodo = (value) => {
@@ -63,24 +47,27 @@
 			item.id === value.detail.todoId ? { ...item, value: value.detail.value } : item
 		);
 		console.log('itemsList', itemsList);
-		updateFilteredList();
 	};
 
 	const handleChangeAll = () => {
 		allDone = !allDone;
 		itemsList = itemsList.map((item) => ({ ...item, isDone: allDone }));
-		updateFilteredList();
 	};
 
 	const handleDelete = (value) => {
 		itemsList = itemsList.filter((item) => item.id !== value.detail.todoId);
-		updateFilteredList();
 	};
 
 	const clearDoneTasks = () => {
 		itemsList = itemsList.filter((item) => !item.isDone);
-		updateFilteredList();
 	};
+
+	$: filteredList =
+		currentFilter === FILTER_ACTIVE
+			? itemsList.filter((item) => !item.isDone)
+			: currentFilter === FILTER_DONE
+			? itemsList.filter((item) => item.isDone)
+			: [...itemsList];
 </script>
 
 <h1>TODO LIST!</h1>
@@ -98,11 +85,6 @@
 		<span class="p-1 font-semibold">No results for current filters 🙁</span>
 	{/if}
 	{#if itemsList?.length !== 0}
-		<Filters
-			bind:filters
-			bind:currentFilter
-			bind:items={itemsList}
-			on:clearDone={clearDoneTasks}
-		/>
+		<Filters bind:filters bind:currentFilter bind:items={itemsList} on:clearDone={clearDoneTasks} />
 	{/if}
 </div>

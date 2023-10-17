@@ -19,7 +19,7 @@
 	}
 
 	input[type='text'] {
-		@apply rounded-lg border-2 border-gray-200 p-1;
+		@apply rounded-lg border-2 border-gray-200 p-1 px-2;
 	}
 
 	h1 {
