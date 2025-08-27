@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	root: true,
 	extends: ['eslint:recommended', 'plugin:svelte/recommended', 'prettier'],
 	parserOptions: {
@@ -8,7 +8,13 @@ module.exports = {
 	},
 	env: {
 		browser: true,
-		es2017: true,
+		es2022: true,
 		node: true
-	}
+	},
+	overrides: [
+		{
+			files: ['*.svelte'],
+			processor: 'svelte3/svelte3'
+		}
+	]
 };
